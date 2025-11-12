@@ -7,7 +7,7 @@ Real-time Customer Experience Platform - Backend API Server
 ## Team Members - Codebytes
 
 - [Tijani Sheu Ahmad](https://github.com/ahmaddev-codes)
-- [Team Member 2 Name]
+- [Burhan Idowu Babatunde](https://github.com/oreiwatsuyoi)
 - [Team Member 3 Name]
 
 ## 🚀 Live Demo
