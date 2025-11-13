@@ -13,8 +13,9 @@ Real-time Customer Experience Platform Frontend
 ## 🚀 Live Demo
 
 - **Live Application**: [Your deployed frontend URL - Vercel/Netlify]
-- **Backend API**: [[https://rt-cx-platform-backend-production.up.railway.app/](https://rt-cx-platform-backend-production.up.railway.app/api-docs/)]
-- **Backend Repo**: [https://github.com/ahmaddev-codes/rt-cx-platform-backend]
+- **Backend API**: https://rt-cx-platform-backend-production.up.railway.app/
+- **API Documentation**: https://rt-cx-platform-backend-production.up.railway.app/api-docs
+- **Backend Repository**: https://github.com/ahmaddev-codes/rt-cx-platform-backend
 - **Recorded Demo**: [Link to your Loom demo video]
 
 ## 🎯 The Problem
