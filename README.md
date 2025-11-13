@@ -8,7 +8,7 @@ Real-time Customer Experience Platform - Backend API Server
 
 - [Tijani Sheu Ahmad](https://github.com/ahmaddev-codes)
 - [Burhan Idowu Babatunde](https://github.com/oreiwatsuyoi)
-- [Elijah Samuel opeyemi] 
+- [Elijah Samuel opeyemi](https://github.com/Samuel0008)
 
 ## 🚀 Live Demo
 
