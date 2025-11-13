@@ -4,6 +4,8 @@ Real-time Customer Experience Platform Frontend
 
 ---
 
+ [VIDEO PRESENTATION LINK](https://drive.google.com/file/d/1LnKejueRd0RQdTO6MHlnA0M0LZLIbRtQ/view?usp=drive_link)
+
 ## Team Members - Codebytes
 
 - [Tijani Sheu Ahmad](https://github.com/ahmaddev-codes)
