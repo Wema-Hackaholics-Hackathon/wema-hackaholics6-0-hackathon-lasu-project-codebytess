@@ -1,0 +1,141 @@
+'use client';
+
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api-client';
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  avatar?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
+  logout: () => Promise<void>;
+  refreshToken: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        const response = await fetch('http://localhost:4000/api/v1/auth/me', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.data);
+        }
+      }
+    } catch (error) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('refresh_token');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const login = async (email: string, password: string) => {
+    const response = await fetch('http://localhost:4000/api/v1/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    
+    if (!response.ok) throw new Error('Login failed');
+    
+    const data = await response.json();
+    setUser(data.data.user);
+    localStorage.setItem('auth_token', data.data.accessToken);
+    localStorage.setItem('refresh_token', data.data.refreshToken);
+  };
+
+  const register = async (email: string, password: string, name: string) => {
+    const response = await fetch('http://localhost:4000/api/v1/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name }),
+    });
+    
+    if (!response.ok) throw new Error('Registration failed');
+    
+    const data = await response.json();
+    setUser(data.data.user);
+    localStorage.setItem('auth_token', data.data.accessToken);
+    localStorage.setItem('refresh_token', data.data.refreshToken);
+  };
+
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      if (token) {
+        await fetch('http://localhost:4000/api/v1/auth/logout', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      // Continue with logout even if API call fails
+    }
+    setUser(null);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
+  };
+
+  const refreshToken = async () => {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) throw new Error('No refresh token');
+    
+    const response = await fetch('http://localhost:4000/api/v1/auth/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    });
+    
+    if (!response.ok) throw new Error('Token refresh failed');
+    
+    const data = await response.json();
+    localStorage.setItem('auth_token', data.data.accessToken);
+    return data.data.accessToken;
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        isAuthenticated: !!user,
+        login,
+        register,
+        logout,
+        refreshToken,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
